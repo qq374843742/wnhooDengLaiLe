@@ -1,6 +1,6 @@
 <view class="controlpage">
 
-  <text class="countdown_clz">剩余 8:25</text>
+  <text class="countdown_clz">{{ctlTimeStr}}</text>
 
   <view class="chose_button_view_clz clearfix">
     <view class="ajust_color_button_clz">
@@ -16,7 +16,7 @@
   </block>
 
   <block class="color_block_clz" wx:else>
-    <view class="color_plate_clz" animation="{{animation}}"  bindtouchmove="touchMoveFN" bindtouchstart="touchStartFN">
+    <view class="color_plate_clz" animation="{{animation}}"  bindtouchmove="touchMoveFN" bindtouchstart="touchStartFN" bindtouchend="touchEndFN">
       <image src="../../img/color_plate.png" style="width:600rpx;height:600rpx"></image>
     </view>
     <image src="../../img/switch_02.png" class="switch_02_clz" bindtap="returnStartControlPage"></image>

@@ -122,6 +122,7 @@ App({
     token: '',
     productCode: '',
     gatewayID: '',
-    deviceID: ''
+    deviceID: '',
+    lastCtlTime:0
   }
 })

@@ -7,6 +7,9 @@ var xStart = 0;
 var yStart = 0;
 var distance = 0;
 var plateAngle = 0.0; 
+var timeoutEvent;
+var timeoutSecond = 0;
+var currentShowTime = 0;
 
 Page({
 
@@ -19,6 +22,7 @@ Page({
     screenHeight: 0,
     screenWidth: 0,
     startColor : 0x82ff00,
+    ctlTimeStr: "剩余 8:25"
   },
 
   /**
@@ -52,6 +56,9 @@ Page({
     this.xStart = 0;
     this.yStart = 0;
     this.distance = 0;
+    this.timeoutEvent = setTimeout(function(){},1);
+    this.timeoutSecond = 0;
+    this.currentShowTime = 0;
 
     //获取屏幕宽高
     var _this = this;
@@ -64,7 +71,38 @@ Page({
       }
     });
 
+    this.currentShowTime = parseInt(app.globalData.lastCtlTime);
+    // console.log('------------------currentShowTime : ' + this.currentShowTime);
+    // console.log('------------------lastCtlTime : ' + app.globalData.lastCtlTime);
+    var that = this;
+    that.countTimeFN();
+
     this.connectUser(app.globalData.token, app.globalData.productCode, app.globalData.gatewayID);
+  },
+
+  countTimeFN:function(){
+    this.currentShowTime -= 1;
+    if (this.currentShowTime <= 0){
+      // 控制时间到了！！！！
+      this.currentShowTime = 0;
+    }
+    var showTimeMin = parseInt(this.currentShowTime / 60);
+    var showTimeSec = parseInt(this.currentShowTime) - showTimeMin * 60;
+    var showTimeStr = "剩余 " + showTimeMin;
+    if (showTimeSec == 0) {
+      showTimeStr += ":00";
+    } else {
+      showTimeStr += ":" + showTimeSec;
+    }
+
+    console.log("当前剩余时间 : " + this.currentShowTime);
+    this.setData({
+      ctlTimeStr:showTimeStr,
+    })
+
+    this.timeoutEvent = setTimeout(function(){
+      this.countTimeFN();
+    }.bind(this), 1000)
   },
 
   /**
@@ -183,6 +221,7 @@ Page({
    */
   touchStartFN: function (events) {
     // console.log(events);
+    this.timeoutSecond = Date.parse(new Date());
     this.xStart = events.touches[0].pageX;
     this.yStart = events.touches[0].pageY;
   },
@@ -197,7 +236,7 @@ Page({
     this.distance = yMove - this.yStart;
     this.yStart = yMove;
 
-    var mPlateAngle = (this.distance * 360 / 150);
+    var mPlateAngle = (this.distance * 360 / 150); // 转盘灵敏度控制
     // console.log('当次移动距离 : ' + this.distance);
     // console.log('当次旋转角度 : ' + mPlateAngle);
 
@@ -235,69 +274,6 @@ Page({
       this.plateAngle = 360 - currentAngle;
     }
 
-    // // 防止颜色值溢出,将范围控制在 0 - 0xFFFFFF 之间
-    // if (this.data.startColor > 0xFFFFFF){
-    //   this.data.startColor = this.data.startColor % 0xFFFFFF;
-    // } else if (this.data.startColor < 0){
-    //   this.data.startColor = 0xFFFFFF + this.data.startColor;
-    // }
-
-    // 颜色设置
-    var redColor = 0;
-    var greenColor = 0;
-    var blueColor = 0;
-    if ((this.plateAngle >= 330) && (this.plateAngle < 30)){
-      // 绿黄区间 -- redColor增加or减少 greenColor固定为255 blueColor固定为0
-      if (this.plateAngle >= 330){
-        // 330~360 : redColor增加
-        var tempValue = 0;
-        tempValue = 360 - this.plateAngle;
-        // 4.25 表示为 颜色区间255/区间角度60度 的比值
-        redColor = parseInt(130 + tempValue * 4.25);
-      } else {
-        redColor = parseInt(130 - this.plateAngle * 4.25);
-      }
-      greenColor = 255;
-      blueColor = 0;
-    } else if ((this.plateAngle >= 30) && (this.plateAngle < 90)){
-      // 绿青区间 -- redColor为0 greenColor为255 blueColor为增量
-      var tempValue = 0;
-      tempValue = this.plateAngle - 30;
-      redColor = 0;
-      greenColor = 255;
-      blueColor = parseInt(tempValue * 4.25);
-    } else if ((this.plateAngle >= 90) && (this.plateAngle < 150)){
-      // 青蓝区间 -- redColor为0 greenColor为减量 blueColor为255
-      var tempValue = 0;
-      tempValue = this.plateAngle - 90;
-      redColor = 0;
-      greenColor = 255 - parseInt(tempValue * 4.25);
-      blueColor = 255;
-    } else if ((this.plateAngle >= 150) && (this.plateAngle < 210)) {
-      // 蓝粉区间 -- redColor为增量 greenColor为0 blueColor为255
-      var tempValue = 0;
-      tempValue = this.plateAngle - 150;
-      redColor = parseInt(tempValue * 4.25);
-      greenColor = 0;
-      blueColor = 255;
-    } else if ((this.plateAngle >= 210) && (this.plateAngle < 270)) {
-      // 粉红区间 -- redColor为255 greenColor为0 blueColor为减量
-      var tempValue = 0;
-      tempValue = this.plateAngle - 210;
-      redColor = 255;
-      greenColor = 0;
-      blueColor = 255 - parseInt(tempValue * 4.25);
-    } else{
-      // 红黄区间 -- redColor为255 greenColor为增量 blueColor为0
-      var tempValue = 0;
-      tempValue = this.plateAngle - 270;
-      redColor = 255;
-      greenColor = parseInt(tempValue * 4.25);
-      blueColor = 0;
-    }
-
-    this.data.startColor = (redColor << 16) + (greenColor << 8) + blueColor;
-
     // 旋转动画设置
     // console.log('当前角度 :' + this.plateAngle);
     this.animation.rotate(this.plateAngle).step();
@@ -310,7 +286,138 @@ Page({
     console.log('当前角度 : ' + this.plateAngle);
     console.log('red :' + redColor + ', green : ' + greenColor + ', blue : ' + blueColor);
     console.log('当前颜色 : ' + this.data.startColor.toString(16));
-    this.slider_ctl_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, this.data.startColor.toString(16));
+
+    // 调色 -- 200ms间隔调色，速度不能太快，否则服务器响应不过来，最好在200~300ms内
+    var currentSecond = Date.parse(new Date());
+    if ((currentSecond - this.timeoutSecond) > 200){
+      this.timeoutSecond = currentSecond;
+      // 颜色设置
+      var redColor = 0;
+      var greenColor = 0;
+      var blueColor = 0;
+      if ((this.plateAngle >= 330) && (this.plateAngle < 30)) {
+        // 绿黄区间 -- redColor增加or减少 greenColor固定为255 blueColor固定为0
+        if (this.plateAngle >= 330) {
+          // 330~360 : redColor增加
+          var tempValue = 0;
+          tempValue = 360 - this.plateAngle;
+          // 4.25 表示为 颜色区间255/区间角度60度 的比值
+          redColor = parseInt(130 + tempValue * 4.25);
+        } else {
+          redColor = parseInt(130 - this.plateAngle * 4.25);
+        }
+        greenColor = 255;
+        blueColor = 0;
+      } else if ((this.plateAngle >= 30) && (this.plateAngle < 90)) {
+        // 绿青区间 -- redColor为0 greenColor为255 blueColor为增量
+        var tempValue = 0;
+        tempValue = this.plateAngle - 30;
+        redColor = 0;
+        greenColor = 255;
+        blueColor = parseInt(tempValue * 4.25);
+      } else if ((this.plateAngle >= 90) && (this.plateAngle < 150)) {
+        // 青蓝区间 -- redColor为0 greenColor为减量 blueColor为255
+        var tempValue = 0;
+        tempValue = this.plateAngle - 90;
+        redColor = 0;
+        greenColor = 255 - parseInt(tempValue * 4.25);
+        blueColor = 255;
+      } else if ((this.plateAngle >= 150) && (this.plateAngle < 210)) {
+        // 蓝粉区间 -- redColor为增量 greenColor为0 blueColor为255
+        var tempValue = 0;
+        tempValue = this.plateAngle - 150;
+        redColor = parseInt(tempValue * 4.25);
+        greenColor = 0;
+        blueColor = 255;
+      } else if ((this.plateAngle >= 210) && (this.plateAngle < 270)) {
+        // 粉红区间 -- redColor为255 greenColor为0 blueColor为减量
+        var tempValue = 0;
+        tempValue = this.plateAngle - 210;
+        redColor = 255;
+        greenColor = 0;
+        blueColor = 255 - parseInt(tempValue * 4.25);
+      } else {
+        // 红黄区间 -- redColor为255 greenColor为增量 blueColor为0
+        var tempValue = 0;
+        tempValue = this.plateAngle - 270;
+        redColor = 255;
+        greenColor = parseInt(tempValue * 4.25);
+        blueColor = 0;
+      }
+
+      this.data.startColor = (redColor << 16) + (greenColor << 8) + blueColor;
+
+      this.slider_ctl_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, this.data.startColor.toString(16));
+    }
+    // clearTimeout(this.timeoutEvent); // 清除上一次的定时事件，防止重复开启定时器
+    // this.timeoutEvent = setTimeout(function(){
+    //   this.slider_ctl_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, this.data.startColor.toString(16));
+    // }, 200);
+  },
+
+  touchEndFN:function(){
+    // 调色 -- 200ms间隔调色，速度不能太快，否则服务器响应不过来，最好在200~300ms内
+    var currentSecond = Date.parse(new Date());
+    if ((currentSecond - this.timeoutSecond) > 200) {
+      this.timeoutSecond = currentSecond;
+      // 颜色设置
+      var redColor = 0;
+      var greenColor = 0;
+      var blueColor = 0;
+      if ((this.plateAngle >= 330) && (this.plateAngle < 30)) {
+        // 绿黄区间 -- redColor增加or减少 greenColor固定为255 blueColor固定为0
+        if (this.plateAngle >= 330) {
+          // 330~360 : redColor增加
+          var tempValue = 0;
+          tempValue = 360 - this.plateAngle;
+          // 4.25 表示为 颜色区间255/区间角度60度 的比值
+          redColor = parseInt(130 + tempValue * 4.25);
+        } else {
+          redColor = parseInt(130 - this.plateAngle * 4.25);
+        }
+        greenColor = 255;
+        blueColor = 0;
+      } else if ((this.plateAngle >= 30) && (this.plateAngle < 90)) {
+        // 绿青区间 -- redColor为0 greenColor为255 blueColor为增量
+        var tempValue = 0;
+        tempValue = this.plateAngle - 30;
+        redColor = 0;
+        greenColor = 255;
+        blueColor = parseInt(tempValue * 4.25);
+      } else if ((this.plateAngle >= 90) && (this.plateAngle < 150)) {
+        // 青蓝区间 -- redColor为0 greenColor为减量 blueColor为255
+        var tempValue = 0;
+        tempValue = this.plateAngle - 90;
+        redColor = 0;
+        greenColor = 255 - parseInt(tempValue * 4.25);
+        blueColor = 255;
+      } else if ((this.plateAngle >= 150) && (this.plateAngle < 210)) {
+        // 蓝粉区间 -- redColor为增量 greenColor为0 blueColor为255
+        var tempValue = 0;
+        tempValue = this.plateAngle - 150;
+        redColor = parseInt(tempValue * 4.25);
+        greenColor = 0;
+        blueColor = 255;
+      } else if ((this.plateAngle >= 210) && (this.plateAngle < 270)) {
+        // 粉红区间 -- redColor为255 greenColor为0 blueColor为减量
+        var tempValue = 0;
+        tempValue = this.plateAngle - 210;
+        redColor = 255;
+        greenColor = 0;
+        blueColor = 255 - parseInt(tempValue * 4.25);
+      } else {
+        // 红黄区间 -- redColor为255 greenColor为增量 blueColor为0
+        var tempValue = 0;
+        tempValue = this.plateAngle - 270;
+        redColor = 255;
+        greenColor = parseInt(tempValue * 4.25);
+        blueColor = 0;
+      }
+
+      this.data.startColor = (redColor << 16) + (greenColor << 8) + blueColor;
+
+      this.slider_ctl_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, this.data.startColor.toString(16));
+    }
   },
 
   slider_ctl_color: function (mtoken, gatewayID, deviceID, color) {
@@ -363,7 +470,8 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    
+    var that = this;
+    clearTimeout(that.timeoutEvent);
   },
 
   /**

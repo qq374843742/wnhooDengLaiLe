@@ -25,7 +25,7 @@ Page({
         if (res.code) {
           that.code = res.code;
 
-          var data = "{\"time\":\"60000\",\"totalFee\":\"1\",\"code\":\""
+          var data = "{\"time\":\"600000\",\"totalFee\":\"1\",\"code\":\""
           data += that.code;
           data += "\"}";
 
@@ -43,7 +43,7 @@ Page({
             method: "POST",
             success: function (res) {
               console.log('code发送服务器成功，返回支付五参 : ');
-              console.log(res.data);
+              console.log(res);
               resultStr = res.data.msg;
               resData = JSON.parse(resultStr);
               console.log(resData);
@@ -57,7 +57,8 @@ Page({
                 paySign: resData.paySign,
                 success: function (res) {
                   console.log('支付成功！！！！');
-
+                  app.globalData.lastCtlTime = 600;
+                  console.log("splash页面 剩余时间为 : " + app.globalData.lastCtlTime);
                   // 微信支付成功，跳转到控制界面.。
                   wx.redirectTo({
                     url: '/pages/controlpage/controlpage',
@@ -87,7 +88,7 @@ Page({
       }
     })
 
-    // 微信支付成功，跳转到控制界面.。
+    //微信支付成功，跳转到控制界面.。
     // wx.redirectTo({
     //   url: '/pages/controlpage/controlpage',
     //   success: function (res) {

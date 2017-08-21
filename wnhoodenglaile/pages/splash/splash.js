@@ -1,6 +1,7 @@
 
 //获取应用实例
 var app = getApp()
+var Util = require('../../utils/util.js');
 
 Page({
   /**
@@ -14,23 +15,8 @@ Page({
    * <立即进入>按键，跳转到支付界面
    */
   splash_button:function(){
-
-    // registerUser(userInfo.nickName, '12345678');
-    // loginUser(userInfo.nickName, '12345678');
-
     this.registerUser(this.data.userInfo.nickName, '12345678');
     this.loginUser(this.data.userInfo.nickName, '12345678');
-
-    wx.redirectTo({
-      url: '/pages/paypage/paypage',
-      success: function(res) {
-        console.log("跳转支付界面成功.。")
-      },
-      fail: function(res) {
-        console.log("跳转支付界面失败....")
-      },
-      complete: function(res) {},
-    })
   },
 
   /**
@@ -87,6 +73,72 @@ Page({
         console.log('登陆成功!!!')
         console.log(res)
         app.globalData.token = res.data.token
+
+        // 支付验证功能
+        wx.login({
+          success: function(res) {
+            var code = res.code;
+            if (code) {
+              var data = "{\"code\":\""
+              data += code;
+              data += "\"}";
+
+              var urlStr = 'https://api.wnhoo.com/smart/wxpay/checkPay?'
+              urlStr += Util.json2Form({ data });
+
+              console.log('splash code : ' + code);
+              console.log(urlStr);
+
+              wx.request({
+                url: urlStr,
+                header: {
+                  "Content-Type": "x-www-form-urlencoded"
+                },
+                method: "POST",
+                success: function (res) {
+                  console.log('用户支付验证端口通过,得到的返回参数为 : ');
+                  console.log(res);
+
+                  // 判断是否需要支付，支付进入支付页面，不需要支付进入控制页面
+                  if (res.data.result == true) {
+                    // 用户已经支付过，还在控制时间内
+                    app.globalData.lastCtlTime = parseInt(res.data.msg);
+                    console.log("splash页面 剩余时间为 : " + app.globalData.lastCtlTime);
+                    // 用户已经支付过钱, 跳转到控制页面
+                    wx.redirectTo({
+                      url: '/pages/controlpage/controlpage',
+                      success: function(res) {
+                        console.log("跳转支付界面成功.。")
+                      },
+                      fail: function(res) {
+                        console.log("跳转支付界面失败....")
+                      },
+                      complete: function(res) {},
+                    })
+                  } else {
+                    // 用户尚未支付，需呀支付才能控制
+                    wx.redirectTo({
+                      url: '/pages/paypage/paypage',
+                      success: function (res) {
+                        console.log("跳转支付界面成功.。")
+                      },
+                      fail: function (res) {
+                        console.log("跳转支付界面失败....")
+                      },
+                      complete: function (res) { },
+                    })
+                  }
+                },
+                fail: function (res) {
+                  console.log("用户支付验证失败...");
+                },
+                complete: function (res) { },
+              })
+            }
+          },
+          fail: function(res) {},
+          complete: function(res) {},
+        })
       },
       fail: function (res) {
         console.log('Sorry, 登陆失败...')
@@ -107,10 +159,6 @@ Page({
         userInfo: userInfo
       })
     })
-
-    var code = app.code;
-    console.log('这是code :')
-    console.log(code);
 
     console.log("二维码中传入的参数options : ");
     console.log(options);
