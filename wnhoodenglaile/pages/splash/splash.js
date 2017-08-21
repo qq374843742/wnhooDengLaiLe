@@ -111,6 +111,18 @@ Page({
     var code = app.code;
     console.log('这是code :')
     console.log(code);
+
+    console.log("二维码中传入的参数options : ");
+    console.log(options);
+    if (options.gatewayID){
+      app.globalData.gatewayID = options.gatewayID;
+      app.globalData.deviceID = options.deviceID;
+      console.log("接收到参数gatewayID 和 deviceID ");
+      console.log("app.gatewayID : " + app.globalData.gatewayID);
+      console.log("app.deviceID : " + app.globalData.deviceID);
+    } else {
+      console.log("-------oops, 没有接收到参数哦！！！！");
+    }
   },
 
   /**

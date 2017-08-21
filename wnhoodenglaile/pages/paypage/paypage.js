@@ -87,7 +87,7 @@ Page({
       }
     })
 
-    // // 微信支付成功，跳转到控制界面.。
+    // 微信支付成功，跳转到控制界面.。
     // wx.redirectTo({
     //   url: '/pages/controlpage/controlpage',
     //   success: function (res) {

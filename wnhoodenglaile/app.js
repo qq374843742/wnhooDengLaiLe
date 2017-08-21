@@ -34,24 +34,26 @@ App({
           console.log(res);
           that.globalData.userInfo = res.userInfo
           typeof cb == "function" && cb(that.globalData.userInfo)
-
-          // 初始化控制灯的参数
-          // registerUser(res.userInfo.nickName, '12345678');
-          // loginUser(res.userInfo.nickName, '12345678');
-          // 测试网关1
-          // that.globalData.productCode = "wnhooDDTest001";
-          // that.globalData.gatewayID = "1010a020a61057f6";
-          // that.globalData.deviceID = "BB13";
-          // 测试网关2
-          // that.globalData.productCode = "wnhooDDTest001";
-          // that.globalData.gatewayID = "1010a020a6014707";
-          // that.globalData.deviceID = "BB16";
-          // 测试网关3
-          that.globalData.productCode = "wnhooDDTest001";
-          that.globalData.gatewayID = "101018fe34cea5ce";
-          that.globalData.deviceID = "BB17";
         }
       })
+
+      // 初始化控制灯的参数
+      // registerUser(res.userInfo.nickName, '12345678');
+      // loginUser(res.userInfo.nickName, '12345678');
+      // 测试网关1
+      // that.globalData.productCode = "wnhooDDTest001";
+      // that.globalData.gatewayID = "1010a020a61057f6";
+      // that.globalData.deviceID = "BB13";
+      // 测试网关2
+      that.globalData.productCode = "wnhooDDTest001";
+      that.globalData.gatewayID = "1010a020a6014707";
+      // that.globalData.deviceID = "BB16";
+      that.globalData.deviceID = "094b";
+          // that.globalData.deviceID = "74df";
+          // 测试网关3
+          // that.globalData.productCode = "wnhooDDTest001";
+          // that.globalData.gatewayID = "101018fe34cea5ce";
+          // that.globalData.deviceID = "BB17";
     }
   },
 
