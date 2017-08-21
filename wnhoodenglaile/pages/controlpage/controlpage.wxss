@@ -1,0 +1,119 @@
+page{
+  height: 100%;
+  background-color: black;
+}
+
+.controlpage{
+  padding-top: 60rpx;
+  
+}
+
+.clearfix:before,.clearfix:after{
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.countdown_clz{
+  font-size: 12px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  margin-right: 30rpx;
+}
+
+.chose_button_view_clz{
+  width: 296rpx;
+  height: 82rpx;
+  float: right;
+  background-color: black;
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+
+  position: absolute;
+  left: 227rpx;
+  top: 60rpx;
+}
+
+.ajust_color_button_clz{
+  width: 48%;
+  border: 1px solid white;
+  display: inline-block;
+  background-color: white;
+  font-size: 16px;
+  color: black;
+  font-weight: bold;
+  line-height: 82rpx;
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+}
+
+.music_button_clz{
+  width: 49%;
+  border: 1px solid white;
+  display: inline-block;
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+  line-height: 82rpx;
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.ctl_text_clz{
+  margin-left: 39rpx;
+  
+}
+
+.color_block_clz{
+  width: 750rpx;
+}
+
+.color_plate_clz{
+  width: 600rpx;
+  height: 600rpx;
+  position: absolute;
+  left: 75rpx;
+  top: 194rpx;
+}
+
+.switch_02_clz{
+  width: 462rpx;
+  height: 308rpx;
+  position: absolute;
+  left: 144rpx;
+  top: 489rpx;
+}
+
+.switch_clz{
+  width: 300rpx;
+  height: 300rpx;
+  position: absolute;
+  left: 225rpx;
+  top: 344rpx;
+}
+
+.slider_clz{
+  width: 95%;
+  position: absolute;
+  left: 34rpx;
+  top: 810rpx;
+}
+
+.section_title_clz{
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.scrollview_clz{
+  width: 700rpx;
+  position: absolute;
+  left: 30rpx;
+  top: 956rpx;
+
+  overflow: auto;
+}
+

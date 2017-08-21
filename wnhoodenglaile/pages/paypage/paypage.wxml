@@ -1,0 +1,35 @@
+<view class="page">
+  <view class="imageview_clz">
+    <image src="../../img/pay.png" class="pay_image_clz"></image>  
+  </view>
+
+  <view class="pay_head_view_clz">
+    <text class="pay_head_clz">支付1元，掌控气氛</text>    
+  </view>
+
+  <view class="pay_explain_block_clz">
+    <view class="pay_explain_block_view_clz">
+      <text class="pay_explain_block_text_clz">1元</text>
+      <text class="pay_explain_block_text_clz">10分钟</text>
+    </view>
+  </view>
+
+  <view class="pay_explain_text_clz">
+    <view class="custom_text_view_clz">
+      <view class="dot_clz"></view>
+      <text class="custom_text_clz">灯来了可调节灯光颜色、明暗、并预设多种情景，灯光还可以随着手机音乐节奏变换。</text>
+    </view>
+    <view class="custom_text_view_clz">
+      <view class="dot_clz"></view>
+      <text class="custom_text_clz">支付1元，即可使用小程序控制灯泡10分钟，并且所有功能都可以使用。</text>
+    </view>
+    <view class="custom_text_view_clz">
+      <view class="dot_clz"></view>
+      <text class="custom_text_clz">付款后立即生效，相应费用不予以退还。</text>
+    </view>
+  </view>
+
+  <button class="pay_button_clz" bindtap="pay_button">支付</button>
+
+</view>
+

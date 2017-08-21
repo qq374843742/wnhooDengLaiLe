@@ -1,0 +1,13 @@
+{
+  "pages":[
+    "pages/splash/splash",
+    "pages/paypage/paypage",
+    "pages/controlpage/controlpage"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#d32f2f",
+    "navigationBarTitleText": "灯来了",
+    "navigationBarTextStyle": "white"
+  }
+}

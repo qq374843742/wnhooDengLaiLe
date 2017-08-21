@@ -1,0 +1,14 @@
+<view class="splash_page">
+  <view class="splash">
+    <text class="head_clz">给你的生活调色</text>
+    <view class="content_view">
+      <text clsss="text_clz" style="color:#fff; display:block;">手机随意调节灯光颜色、亮度</text>
+      <text clsss="text_clz" style="color:#fff; display:block;">并预设多种情景色彩模式</text>
+      <text clsss="text_clz" style="color:#fff; display:block;">灯光还可以随着手机音乐节奏变换</text>
+    </view>
+  </view>
+
+  <view class="bottom_button">
+    <button class="entry_button" bindtap="splash_button">立即进入</button>
+  </view>
+</view>

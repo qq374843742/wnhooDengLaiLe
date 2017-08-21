@@ -1,0 +1,43 @@
+<view class="controlpage">
+
+  <text class="countdown_clz">剩余 8:25</text>
+
+  <view class="chose_button_view_clz clearfix">
+    <view class="ajust_color_button_clz">
+      <text class="ctl_text_clz">调色</text>
+    </view>
+    <view class="music_button_clz">
+      <text class="ctl_text_clz">音乐</text>
+    </view>
+  </view>>
+
+  <block wx:if="{{isNotControl}}">
+    <image src="../../img/switch_01.png" class="color_plate_clz" bindtap="turnOnControl"></image>
+  </block>
+
+  <block class="color_block_clz" wx:else>
+    <view class="color_plate_clz" animation="{{animation}}"  bindtouchmove="touchMoveFN" bindtouchstart="touchStartFN">
+      <image src="../../img/color_plate.png" style="width:600rpx;height:600rpx"></image>
+    </view>
+    <image src="../../img/switch_02.png" class="switch_02_clz" bindtap="returnStartControlPage"></image>
+    <image src="../../img/color_btn.png" class="switch_clz"></image>
+
+    <view class="section section_gap slider_clz">
+      <text class="section_title_clz">亮度</text>
+      <view >
+        <slider bindchange="slider4change" min="0" max="100" activeColor="#f00" value="100" style="margin-left:0px;"/>
+      </view>
+    </view>
+
+    <scroll-view scroll-x="true" style="white-space: nowrap; display:flex " class="scrollview_clz">
+      <image src="../../img/scene1.png" style="width: 130px; height: 100px;display:inline-block;"></image>
+      <view style="width:30rpx;height: 100px;display:inline-block;"></view>
+      <image src="../../img/scene2.png" style="width: 130px; height: 100px;display:inline-block"></image>
+      <view style="width:30rpx;height: 100px;display:inline-block;"></view>
+      <image src="../../img/scene3.png" style="width: 130px; height: 100px;display:inline-block"></image>
+      <view style="width:30rpx;height: 100px;display:inline-block;"></view>
+      <image src="../../img/scene4.png" style="width: 130px; height: 100px;display:inline-block"></image>
+    </scroll-view>
+  </block>
+
+</view>
