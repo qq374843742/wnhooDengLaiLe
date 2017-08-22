@@ -289,7 +289,7 @@ Page({
 
     // 调色 -- 200ms间隔调色，速度不能太快，否则服务器响应不过来，最好在200~300ms内
     var currentSecond = Date.parse(new Date());
-    if ((currentSecond - this.timeoutSecond) > 200){
+    if ((currentSecond - this.timeoutSecond) > 50){ // 200是间隔时间，可以调整
       this.timeoutSecond = currentSecond;
       // 颜色设置
       var redColor = 0;

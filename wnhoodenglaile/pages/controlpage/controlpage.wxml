@@ -17,8 +17,9 @@
 
   <block class="color_block_clz" wx:else>
     <view class="color_plate_clz" animation="{{animation}}"  bindtouchmove="touchMoveFN" bindtouchstart="touchStartFN" bindtouchend="touchEndFN">
-      <image src="../../img/color_plate.png" style="width:600rpx;height:600rpx"></image>
+      <image src="../../img/color_plate.png" style="width:532rpx;height:532rpx"></image>
     </view>
+    <image src="../../img/traingle.png" class="traingle_clz"></image>
     <image src="../../img/switch_02.png" class="switch_02_clz" bindtap="returnStartControlPage"></image>
     <image src="../../img/color_btn.png" class="switch_clz"></image>
 

@@ -72,27 +72,35 @@ page{
 }
 
 .color_plate_clz{
-  width: 600rpx;
-  height: 600rpx;
+  width: 532rpx;
+  height: 532rpx;
   position: absolute;
-  left: 75rpx;
-  top: 194rpx;
+  left: 111rpx;
+  top: 244rpx;
+}
+
+.traingle_clz{
+  width: 128rpx;
+  height: 104rpx;
+  position: absolute;
+  left: 311rpx;
+  top: 230rpx;
 }
 
 .switch_02_clz{
-  width: 462rpx;
-  height: 308rpx;
+  width: 412rpx;
+  height: 269rpx;
   position: absolute;
-  left: 144rpx;
-  top: 489rpx;
+  left: 171rpx;
+  top: 509rpx;
 }
 
 .switch_clz{
-  width: 300rpx;
-  height: 300rpx;
+  width: 266rpx;
+  height: 266rpx;
   position: absolute;
-  left: 225rpx;
-  top: 344rpx;
+  left: 242rpx;
+  top: 369rpx;
 }
 
 .slider_clz{
