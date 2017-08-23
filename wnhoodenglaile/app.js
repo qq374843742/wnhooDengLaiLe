@@ -47,8 +47,8 @@ App({
       // 测试网关2
       that.globalData.productCode = "wnhooDDTest001";
       that.globalData.gatewayID = "1010a020a6014707";
-      // that.globalData.deviceID = "BB16";
-      that.globalData.deviceID = "094b";
+      that.globalData.deviceID = "85D8";
+      // that.globalData.deviceID = "094b";
           // that.globalData.deviceID = "74df";
           // 测试网关3
           // that.globalData.productCode = "wnhooDDTest001";

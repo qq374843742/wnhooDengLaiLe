@@ -3,13 +3,14 @@
 var app = getApp()
 var Util = require('../../utils/util.js');
 
-var xStart = 0;
-var yStart = 0;
-var distance = 0;
-var plateAngle = 0.0; 
+var xStart;
+var yStart;
+var distance;
+var plateAngle; 
 var timeoutEvent;
-var timeoutSecond = 0;
-var currentShowTime = 0;
+var timeoutSecond;
+var currentShowTime;
+var isStartConsole;
 
 Page({
 
@@ -21,7 +22,8 @@ Page({
     animation: '',
     screenHeight: 0,
     screenWidth: 0,
-    startColor : 0x82ff00,
+    startColor : 0x08ff00,
+    startRedColor : 11,
     ctlTimeStr: "剩余 8:25"
   },
 
@@ -59,6 +61,7 @@ Page({
     this.timeoutEvent = setTimeout(function(){},1);
     this.timeoutSecond = 0;
     this.currentShowTime = 0;
+    this.isStartConsole = false;
 
     //获取屏幕宽高
     var _this = this;
@@ -95,7 +98,11 @@ Page({
       showTimeStr += ":" + showTimeSec;
     }
 
-    console.log("当前剩余时间 : " + this.currentShowTime);
+    // 是否开启调试信息，默认为false
+    if (this.isStartConsole){
+      console.log("当前剩余时间 : " + this.currentShowTime);
+    }
+    
     this.setData({
       ctlTimeStr:showTimeStr,
     })
@@ -282,123 +289,61 @@ Page({
       animation: this.animation.export()
     })
 
-    // 发送调色指令
-    console.log('当前角度 : ' + this.plateAngle);
-    console.log('red :' + redColor + ', green : ' + greenColor + ', blue : ' + blueColor);
-    console.log('当前颜色 : ' + this.data.startColor.toString(16));
+    //console.log("当前角度 : " + this.plateAngle);
 
-    // 调色 -- 200ms间隔调色，速度不能太快，否则服务器响应不过来，最好在200~300ms内
-    var currentSecond = Date.parse(new Date());
-    if ((currentSecond - this.timeoutSecond) > 50){ // 200是间隔时间，可以调整
-      this.timeoutSecond = currentSecond;
-      // 颜色设置
-      var redColor = 0;
-      var greenColor = 0;
-      var blueColor = 0;
-      if ((this.plateAngle >= 330) && (this.plateAngle < 30)) {
-        // 绿黄区间 -- redColor增加or减少 greenColor固定为255 blueColor固定为0
-        if (this.plateAngle >= 330) {
-          // 330~360 : redColor增加
-          var tempValue = 0;
-          tempValue = 360 - this.plateAngle;
-          // 4.25 表示为 颜色区间255/区间角度60度 的比值
-          redColor = parseInt(130 + tempValue * 4.25);
-        } else {
-          redColor = parseInt(130 - this.plateAngle * 4.25);
-        }
-        greenColor = 255;
-        blueColor = 0;
-      } else if ((this.plateAngle >= 30) && (this.plateAngle < 90)) {
-        // 绿青区间 -- redColor为0 greenColor为255 blueColor为增量
-        var tempValue = 0;
-        tempValue = this.plateAngle - 30;
-        redColor = 0;
-        greenColor = 255;
-        blueColor = parseInt(tempValue * 4.25);
-      } else if ((this.plateAngle >= 90) && (this.plateAngle < 150)) {
-        // 青蓝区间 -- redColor为0 greenColor为减量 blueColor为255
-        var tempValue = 0;
-        tempValue = this.plateAngle - 90;
-        redColor = 0;
-        greenColor = 255 - parseInt(tempValue * 4.25);
-        blueColor = 255;
-      } else if ((this.plateAngle >= 150) && (this.plateAngle < 210)) {
-        // 蓝粉区间 -- redColor为增量 greenColor为0 blueColor为255
-        var tempValue = 0;
-        tempValue = this.plateAngle - 150;
-        redColor = parseInt(tempValue * 4.25);
-        greenColor = 0;
-        blueColor = 255;
-      } else if ((this.plateAngle >= 210) && (this.plateAngle < 270)) {
-        // 粉红区间 -- redColor为255 greenColor为0 blueColor为减量
-        var tempValue = 0;
-        tempValue = this.plateAngle - 210;
-        redColor = 255;
-        greenColor = 0;
-        blueColor = 255 - parseInt(tempValue * 4.25);
-      } else {
-        // 红黄区间 -- redColor为255 greenColor为增量 blueColor为0
-        var tempValue = 0;
-        tempValue = this.plateAngle - 270;
-        redColor = 255;
-        greenColor = parseInt(tempValue * 4.25);
-        blueColor = 0;
-      }
-
-      this.data.startColor = (redColor << 16) + (greenColor << 8) + blueColor;
-
-      this.slider_ctl_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, this.data.startColor.toString(16));
-    }
-    // clearTimeout(this.timeoutEvent); // 清除上一次的定时事件，防止重复开启定时器
-    // this.timeoutEvent = setTimeout(function(){
-    //   this.slider_ctl_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, this.data.startColor.toString(16));
-    // }, 200);
+    // 根据this.plateAngle角度进行调色
+    //this.ajust_color_with_angle();
   },
 
   touchEndFN:function(){
+    // 根据this.plateAngle角度进行调色
+    this.ajust_color_with_angle();
+  },
+
+  ajust_color_with_angle:function(){
     // 调色 -- 200ms间隔调色，速度不能太快，否则服务器响应不过来，最好在200~300ms内
     var currentSecond = Date.parse(new Date());
-    if ((currentSecond - this.timeoutSecond) > 200) {
+    if ((currentSecond - this.timeoutSecond) > 20) { // 200是间隔时间，可以调整
       this.timeoutSecond = currentSecond;
       // 颜色设置
       var redColor = 0;
       var greenColor = 0;
       var blueColor = 0;
-      if ((this.plateAngle >= 330) && (this.plateAngle < 30)) {
+      if ((this.plateAngle >= 303) && (this.plateAngle < 3)) {
         // 绿黄区间 -- redColor增加or减少 greenColor固定为255 blueColor固定为0
-        if (this.plateAngle >= 330) {
+        if (this.plateAngle >= 303) {
           // 330~360 : redColor增加
           var tempValue = 0;
           tempValue = 360 - this.plateAngle;
           // 4.25 表示为 颜色区间255/区间角度60度 的比值
-          redColor = parseInt(130 + tempValue * 4.25);
+          redColor = parseInt(this.data.startRedColor + tempValue * 4.25);
         } else {
-          redColor = parseInt(130 - this.plateAngle * 4.25);
+          redColor = parseInt(this.data.startRedColor - this.plateAngle * 4.25);
         }
         greenColor = 255;
         blueColor = 0;
-      } else if ((this.plateAngle >= 30) && (this.plateAngle < 90)) {
+      } else if ((this.plateAngle >= 3) && (this.plateAngle < 63)) {
         // 绿青区间 -- redColor为0 greenColor为255 blueColor为增量
         var tempValue = 0;
         tempValue = this.plateAngle - 30;
         redColor = 0;
         greenColor = 255;
         blueColor = parseInt(tempValue * 4.25);
-      } else if ((this.plateAngle >= 90) && (this.plateAngle < 150)) {
+      } else if ((this.plateAngle >= 63) && (this.plateAngle < 123)) {
         // 青蓝区间 -- redColor为0 greenColor为减量 blueColor为255
         var tempValue = 0;
         tempValue = this.plateAngle - 90;
         redColor = 0;
         greenColor = 255 - parseInt(tempValue * 4.25);
         blueColor = 255;
-      } else if ((this.plateAngle >= 150) && (this.plateAngle < 210)) {
+      } else if ((this.plateAngle >= 123) && (this.plateAngle < 183)) {
         // 蓝粉区间 -- redColor为增量 greenColor为0 blueColor为255
         var tempValue = 0;
         tempValue = this.plateAngle - 150;
         redColor = parseInt(tempValue * 4.25);
         greenColor = 0;
         blueColor = 255;
-      } else if ((this.plateAngle >= 210) && (this.plateAngle < 270)) {
+      } else if ((this.plateAngle >= 183) && (this.plateAngle < 243)) {
         // 粉红区间 -- redColor为255 greenColor为0 blueColor为减量
         var tempValue = 0;
         tempValue = this.plateAngle - 210;
@@ -413,10 +358,43 @@ Page({
         greenColor = parseInt(tempValue * 4.25);
         blueColor = 0;
       }
-
+      // 滤波设置，防止颜色超出范围
+      if (redColor>=255){
+        redColor = 255;
+      }else if (redColor <= 0){
+        redColor = 0;
+      }
+      if (greenColor >= 255) {
+        greenColor = 255;
+      } else if (greenColor <= 0) {
+        greenColor = 0;
+      }
+      if (blueColor >= 255) {
+        blueColor = 255;
+      } else if (blueColor <= 0) {
+        blueColor = 0;
+      }
+      //发送调色指令
       this.data.startColor = (redColor << 16) + (greenColor << 8) + blueColor;
-
-      this.slider_ctl_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, this.data.startColor.toString(16));
+      console.log('当前角度 : ' + this.plateAngle);
+      console.log('red :' + redColor + ', green : ' + greenColor + ', blue : ' + blueColor);
+      console.log('当前颜色 : ' + this.data.startColor.toString(16));
+      // 判断红色的值是否异常，必须要补足6位数
+      var color27;
+      if(redColor == 0){
+        if(greenColor == 0){
+          color27 = "0000" + this.data.startColor.toString(16);
+        } else if (greenColor < 16) {
+          color27 = "000" + this.data.startColor.toString(16);
+        } else {
+          color27 = "00" + this.data.startColor.toString(16);
+        }
+      } else if (redColor < 16){
+        color27 = "0" + this.data.startColor.toString(16);
+      } else {
+        color27 = this.data.startColor.toString(16);
+      }
+      this.slider_ctl_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, color27);
     }
   },
 

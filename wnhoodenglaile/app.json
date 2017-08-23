@@ -1,5 +1,6 @@
 {
   "pages":[
+    
     "pages/splash/splash",
     "pages/paypage/paypage",
     "pages/controlpage/controlpage"
