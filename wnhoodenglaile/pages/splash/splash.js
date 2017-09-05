@@ -128,6 +128,18 @@ Page({
                       complete: function (res) { },
                     })
                   }
+
+                  // 用户尚未支付，需呀支付才能控制
+                  // wx.redirectTo({
+                  //   url: '/pages/paypage/paypage',
+                  //   success: function (res) {
+                  //     console.log("跳转支付界面成功.。")
+                  //   },
+                  //   fail: function (res) {
+                  //     console.log("跳转支付界面失败....")
+                  //   },
+                  //   complete: function (res) { },
+                  // })
                 },
                 fail: function (res) {
                   console.log("用户支付验证失败...");

@@ -43,6 +43,7 @@ Page({
    * <关闭灯图标> -- 退出控制页面
    */
   returnStartControlPage:function(){
+    // 关灯
     this.turnOffUser(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID);
     this.setData({
       isNotControl: true,
@@ -292,7 +293,7 @@ Page({
     //console.log("当前角度 : " + this.plateAngle);
 
     // 根据this.plateAngle角度进行调色
-    //this.ajust_color_with_angle();
+    this.ajust_color_with_angle();
   },
 
   touchEndFN:function(){
@@ -309,7 +310,7 @@ Page({
       var redColor = 0;
       var greenColor = 0;
       var blueColor = 0;
-      if ((this.plateAngle >= 303) && (this.plateAngle < 3)) {
+      if ((this.plateAngle >= 303) || (this.plateAngle < 3)) {
         // 绿黄区间 -- redColor增加or减少 greenColor固定为255 blueColor固定为0
         if (this.plateAngle >= 303) {
           // 330~360 : redColor增加
@@ -398,6 +399,9 @@ Page({
     }
   },
 
+  /**
+   * 发送调节颜色的指令
+   */
   slider_ctl_color: function (mtoken, gatewayID, deviceID, color) {
     //console.log(res.detail.value);
 
@@ -417,6 +421,61 @@ Page({
       },
       method: "POST",
       data: Util.json2Form({ token: mtoken, device_id: gatewayID, sensor_id: 'S62', sensor_type: 1, timestamp: ts, data: controlStr}),
+      success: function (res) {
+        console.log('调节LED灯成功！');
+        // console.log(res);
+      },
+      fail: function (res) {
+        console.log('Sorry, 调节LED灯失败...');
+      },
+      complete: function (res) {
+
+      },
+    })
+  },
+
+  romanticScene:function(){
+    // 情景模式 -- 02红粉浪漫
+    this.scene_ajust_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, "020000");
+  },
+
+  partyScene:function(){
+    // 情景模式 -- 06炫彩呼吸
+    this.scene_ajust_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, "060000");
+  },
+
+  fadeScene:function(){
+    // 情景模式 -- 01炫彩渐变
+    this.scene_ajust_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, "010000");
+  },
+
+  forestScene:function(){
+    // 情景模式 -- 05萤火之森
+    this.scene_ajust_color(app.globalData.token, app.globalData.gatewayID, app.globalData.deviceID, "050000");
+  },
+
+  /**
+   * 情景模式
+   */
+  scene_ajust_color: function (mtoken, gatewayID, deviceID, color) {
+    //console.log(res.detail.value);
+
+    var ts = Date.parse(new Date());
+    ts = ts / 1000;
+
+    var controlStr = '';
+    controlStr += deviceID;
+    controlStr += ";21";
+    controlStr += color;
+    controlStr += "0000";
+
+    wx.request({
+      url: 'https://api.wnhoo.com/smart/sensors/send_push',
+      header: {
+        "Content-Type": "x-www-form-urlencoded"
+      },
+      method: "POST",
+      data: Util.json2Form({ token: mtoken, device_id: gatewayID, sensor_id: 'S62', sensor_type: 1, timestamp: ts, data: controlStr }),
       success: function (res) {
         console.log('调节LED灯成功！');
         // console.log(res);

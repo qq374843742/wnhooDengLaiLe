@@ -31,13 +31,13 @@
     </view>
 
     <scroll-view scroll-x="true" style="white-space: nowrap; display:flex " class="scrollview_clz">
-      <image src="../../img/scene1.png" style="width: 130px; height: 100px;display:inline-block;"></image>
+      <image src="../../img/scene1.png" style="width: 130px; height: 100px;display:inline-block;" bindtap="romanticScene"></image>
       <view style="width:30rpx;height: 100px;display:inline-block;"></view>
-      <image src="../../img/scene2.png" style="width: 130px; height: 100px;display:inline-block"></image>
+      <image src="../../img/scene2.png" style="width: 130px; height: 100px;display:inline-block" bindtap="partyScene"></image>
       <view style="width:30rpx;height: 100px;display:inline-block;"></view>
-      <image src="../../img/scene3.png" style="width: 130px; height: 100px;display:inline-block"></image>
+      <image src="../../img/scene3.png" style="width: 130px; height: 100px;display:inline-block" bindtap="fadeScene"></image>
       <view style="width:30rpx;height: 100px;display:inline-block;"></view>
-      <image src="../../img/scene4.png" style="width: 130px; height: 100px;display:inline-block"></image>
+      <image src="../../img/scene4.png" style="width: 130px; height: 100px;display:inline-block" bindtap="forestScene"></image>
     </scroll-view>
   </block>
 
